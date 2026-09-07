@@ -1,0 +1,659 @@
+Package: None
+Imports: []
+Class 数量: 1
+CompilationUnit {
+    package: None,
+    imports: [],
+    classes: [
+        ClassDecl {
+            modifiers: [
+                Public,
+            ],
+            name: "ExampleServlet",
+            super_class: Some(
+                "HttpServlet",
+            ),
+            interfaces: [],
+            members: [
+                Field(
+                    FieldDecl {
+                        modifiers: [
+                            Private,
+                            Static,
+                            Final,
+                        ],
+                        var_type: Reference {
+                            name: "String",
+                            type_args: [],
+                        },
+                        declarators: [
+                            VarDeclarator {
+                                name: "SECRET_KEY",
+                                init: Some(
+                                    StringLiteral(
+                                        "hardcoded-secret-123",
+                                    ),
+                                ),
+                            },
+                        ],
+                    },
+                ),
+                Method(
+                    MethodDecl {
+                        modifiers: [
+                            Public,
+                        ],
+                        return_type: Primitive(
+                            Void,
+                        ),
+                        name: "doPost",
+                        params: [
+                            MethodParam {
+                                var_type: Reference {
+                                    name: "HttpServletRequest",
+                                    type_args: [],
+                                },
+                                name: "request",
+                            },
+                            MethodParam {
+                                var_type: Reference {
+                                    name: "HttpServletResponse",
+                                    type_args: [],
+                                },
+                                name: "response",
+                            },
+                        ],
+                        throws: [
+                            "ServletException",
+                            "IOException",
+                        ],
+                        body: Some(
+                            Block {
+                                statements: [
+                                    VarDecl {
+                                        modifiers: [],
+                                        var_type: Reference {
+                                            name: "String",
+                                            type_args: [],
+                                        },
+                                        declarators: [
+                                            VarDeclarator {
+                                                name: "param",
+                                                init: Some(
+                                                    Call {
+                                                        callee: MemberAccess {
+                                                            object: Ident(
+                                                                "request",
+                                                            ),
+                                                            member: "getParameter",
+                                                        },
+                                                        args: [
+                                                            StringLiteral(
+                                                                "id",
+                                                            ),
+                                                        ],
+                                                    },
+                                                ),
+                                            },
+                                        ],
+                                    },
+                                    If {
+                                        cond: Binary {
+                                            op: Eq,
+                                            left: Ident(
+                                                "param",
+                                            ),
+                                            right: NullLiteral,
+                                        },
+                                        then_branch: Block {
+                                            statements: [
+                                                ExprStmt {
+                                                    expr: Assign {
+                                                        target: Ident(
+                                                            "param",
+                                                        ),
+                                                        value: StringLiteral(
+                                                            "",
+                                                        ),
+                                                    },
+                                                },
+                                            ],
+                                        },
+                                        else_branch: None,
+                                    },
+                                    VarDecl {
+                                        modifiers: [],
+                                        var_type: Reference {
+                                            name: "String",
+                                            type_args: [],
+                                        },
+                                        declarators: [
+                                            VarDeclarator {
+                                                name: "sql",
+                                                init: Some(
+                                                    Binary {
+                                                        op: Add,
+                                                        left: Binary {
+                                                            op: Add,
+                                                            left: StringLiteral(
+                                                                "SELECT * FROM users WHERE id = '",
+                                                            ),
+                                                            right: Ident(
+                                                                "param",
+                                                            ),
+                                                        },
+                                                        right: StringLiteral(
+                                                            "'",
+                                                        ),
+                                                    },
+                                                ),
+                                            },
+                                        ],
+                                    },
+                                    VarDecl {
+                                        modifiers: [],
+                                        var_type: Reference {
+                                            name: "Connection",
+                                            type_args: [],
+                                        },
+                                        declarators: [
+                                            VarDeclarator {
+                                                name: "conn",
+                                                init: Some(
+                                                    Call {
+                                                        callee: MemberAccess {
+                                                            object: Ident(
+                                                                "DriverManager",
+                                                            ),
+                                                            member: "getConnection",
+                                                        },
+                                                        args: [
+                                                            Ident(
+                                                                "url",
+                                                            ),
+                                                            Ident(
+                                                                "user",
+                                                            ),
+                                                            Ident(
+                                                                "pass",
+                                                            ),
+                                                        ],
+                                                    },
+                                                ),
+                                            },
+                                        ],
+                                    },
+                                    VarDecl {
+                                        modifiers: [],
+                                        var_type: Reference {
+                                            name: "Statement",
+                                            type_args: [],
+                                        },
+                                        declarators: [
+                                            VarDeclarator {
+                                                name: "stmt",
+                                                init: Some(
+                                                    Call {
+                                                        callee: MemberAccess {
+                                                            object: Ident(
+                                                                "conn",
+                                                            ),
+                                                            member: "createStatement",
+                                                        },
+                                                        args: [],
+                                                    },
+                                                ),
+                                            },
+                                        ],
+                                    },
+                                    VarDecl {
+                                        modifiers: [],
+                                        var_type: Reference {
+                                            name: "ResultSet",
+                                            type_args: [],
+                                        },
+                                        declarators: [
+                                            VarDeclarator {
+                                                name: "rs",
+                                                init: Some(
+                                                    Call {
+                                                        callee: MemberAccess {
+                                                            object: Ident(
+                                                                "stmt",
+                                                            ),
+                                                            member: "executeQuery",
+                                                        },
+                                                        args: [
+                                                            Ident(
+                                                                "sql",
+                                                            ),
+                                                        ],
+                                                    },
+                                                ),
+                                            },
+                                        ],
+                                    },
+                                    VarDecl {
+                                        modifiers: [],
+                                        var_type: Reference {
+                                            name: "String",
+                                            type_args: [],
+                                        },
+                                        declarators: [
+                                            VarDeclarator {
+                                                name: "bar",
+                                                init: Some(
+                                                    StringLiteral(
+                                                        "",
+                                                    ),
+                                                ),
+                                            },
+                                        ],
+                                    },
+                                    Switch {
+                                        selector: Call {
+                                            callee: MemberAccess {
+                                                object: Ident(
+                                                    "param",
+                                                ),
+                                                member: "charAt",
+                                            },
+                                            args: [
+                                                IntLiteral(
+                                                    0,
+                                                ),
+                                            ],
+                                        },
+                                        cases: [
+                                            SwitchCase {
+                                                labels: [
+                                                    CharLiteral(
+                                                        "'A'",
+                                                    ),
+                                                ],
+                                                statements: [
+                                                    ExprStmt {
+                                                        expr: Assign {
+                                                            target: Ident(
+                                                                "bar",
+                                                            ),
+                                                            value: Ident(
+                                                                "param",
+                                                            ),
+                                                        },
+                                                    },
+                                                    Break {
+                                                        label: None,
+                                                    },
+                                                ],
+                                            },
+                                            SwitchCase {
+                                                labels: [],
+                                                statements: [
+                                                    ExprStmt {
+                                                        expr: Assign {
+                                                            target: Ident(
+                                                                "bar",
+                                                            ),
+                                                            value: StringLiteral(
+                                                                "safe",
+                                                            ),
+                                                        },
+                                                    },
+                                                    Break {
+                                                        label: None,
+                                                    },
+                                                ],
+                                            },
+                                        ],
+                                    },
+                                    ExprStmt {
+                                        expr: Call {
+                                            callee: MemberAccess {
+                                                object: Call {
+                                                    callee: MemberAccess {
+                                                        object: Ident(
+                                                            "response",
+                                                        ),
+                                                        member: "getWriter",
+                                                    },
+                                                    args: [],
+                                                },
+                                                member: "println",
+                                            },
+                                            args: [
+                                                Binary {
+                                                    op: Add,
+                                                    left: StringLiteral(
+                                                        "result: ",
+                                                    ),
+                                                    right: Ident(
+                                                        "bar",
+                                                    ),
+                                                },
+                                            ],
+                                        },
+                                    },
+                                    Try {
+                                        resources: [],
+                                        body: Block {
+                                            statements: [
+                                                VarDecl {
+                                                    modifiers: [],
+                                                    var_type: Reference {
+                                                        name: "Process",
+                                                        type_args: [],
+                                                    },
+                                                    declarators: [
+                                                        VarDeclarator {
+                                                            name: "p",
+                                                            init: Some(
+                                                                Call {
+                                                                    callee: MemberAccess {
+                                                                        object: Call {
+                                                                            callee: MemberAccess {
+                                                                                object: Ident(
+                                                                                    "Runtime",
+                                                                                ),
+                                                                                member: "getRuntime",
+                                                                            },
+                                                                            args: [],
+                                                                        },
+                                                                        member: "exec",
+                                                                    },
+                                                                    args: [
+                                                                        Binary {
+                                                                            op: Add,
+                                                                            left: StringLiteral(
+                                                                                "grep ",
+                                                                            ),
+                                                                            right: Ident(
+                                                                                "param",
+                                                                            ),
+                                                                        },
+                                                                    ],
+                                                                },
+                                                            ),
+                                                        },
+                                                    ],
+                                                },
+                                                VarDecl {
+                                                    modifiers: [],
+                                                    var_type: Primitive(
+                                                        Int,
+                                                    ),
+                                                    declarators: [
+                                                        VarDeclarator {
+                                                            name: "n",
+                                                            init: Some(
+                                                                Call {
+                                                                    callee: MemberAccess {
+                                                                        object: Ident(
+                                                                            "Integer",
+                                                                        ),
+                                                                        member: "parseInt",
+                                                                    },
+                                                                    args: [
+                                                                        Ident(
+                                                                            "param",
+                                                                        ),
+                                                                    ],
+                                                                },
+                                                            ),
+                                                        },
+                                                    ],
+                                                },
+                                                For {
+                                                    init: [
+                                                        VarDecl {
+                                                            modifiers: [],
+                                                            var_type: Primitive(
+                                                                Int,
+                                                            ),
+                                                            declarators: [
+                                                                VarDeclarator {
+                                                                    name: "i",
+                                                                    init: Some(
+                                                                        IntLiteral(
+                                                                            0,
+                                                                        ),
+                                                                    ),
+                                                                },
+                                                            ],
+                                                        },
+                                                    ],
+                                                    condition: Some(
+                                                        Binary {
+                                                            op: Lt,
+                                                            left: Ident(
+                                                                "i",
+                                                            ),
+                                                            right: Ident(
+                                                                "n",
+                                                            ),
+                                                        },
+                                                    ),
+                                                    update: [
+                                                        Unary {
+                                                            op: PlusPlus,
+                                                            expr: Ident(
+                                                                "i",
+                                                            ),
+                                                        },
+                                                    ],
+                                                    body: Block {
+                                                        statements: [
+                                                            ExprStmt {
+                                                                expr: Call {
+                                                                    callee: MemberAccess {
+                                                                        object: MemberAccess {
+                                                                            object: Ident(
+                                                                                "System",
+                                                                            ),
+                                                                            member: "out",
+                                                                        },
+                                                                        member: "println",
+                                                                    },
+                                                                    args: [
+                                                                        Ident(
+                                                                            "i",
+                                                                        ),
+                                                                    ],
+                                                                },
+                                                            },
+                                                        ],
+                                                    },
+                                                },
+                                                VarDecl {
+                                                    modifiers: [],
+                                                    var_type: Array {
+                                                        element_type: Reference {
+                                                            name: "String",
+                                                            type_args: [],
+                                                        },
+                                                        dimensions: 1,
+                                                    },
+                                                    declarators: [
+                                                        VarDeclarator {
+                                                            name: "arr",
+                                                            init: Some(
+                                                                NewArrayInit {
+                                                                    elem_type: Array {
+                                                                        element_type: Reference {
+                                                                            name: "String",
+                                                                            type_args: [],
+                                                                        },
+                                                                        dimensions: 1,
+                                                                    },
+                                                                    elements: [
+                                                                        StringLiteral(
+                                                                            "a",
+                                                                        ),
+                                                                        StringLiteral(
+                                                                            "b",
+                                                                        ),
+                                                                    ],
+                                                                },
+                                                            ),
+                                                        },
+                                                    ],
+                                                },
+                                                ForEach {
+                                                    var_type: Reference {
+                                                        name: "String",
+                                                        type_args: [],
+                                                    },
+                                                    var_name: "s",
+                                                    iterable: Ident(
+                                                        "arr",
+                                                    ),
+                                                    body: Block {
+                                                        statements: [
+                                                            ExprStmt {
+                                                                expr: Call {
+                                                                    callee: MemberAccess {
+                                                                        object: MemberAccess {
+                                                                            object: Ident(
+                                                                                "System",
+                                                                            ),
+                                                                            member: "out",
+                                                                        },
+                                                                        member: "println",
+                                                                    },
+                                                                    args: [
+                                                                        Binary {
+                                                                            op: Add,
+                                                                            left: Ident(
+                                                                                "s",
+                                                                            ),
+                                                                            right: Ident(
+                                                                                "param",
+                                                                            ),
+                                                                        },
+                                                                    ],
+                                                                },
+                                                            },
+                                                        ],
+                                                    },
+                                                },
+                                            ],
+                                        },
+                                        catches: [
+                                            CatchClause {
+                                                types: [
+                                                    Reference {
+                                                        name: "NumberFormatException",
+                                                        type_args: [],
+                                                    },
+                                                ],
+                                                var_name: "e",
+                                                body: Block {
+                                                    statements: [
+                                                        ExprStmt {
+                                                            expr: Call {
+                                                                callee: MemberAccess {
+                                                                    object: Ident(
+                                                                        "e",
+                                                                    ),
+                                                                    member: "printStackTrace",
+                                                                },
+                                                                args: [],
+                                                            },
+                                                        },
+                                                    ],
+                                                },
+                                            },
+                                        ],
+                                        finally_body: Some(
+                                            Block {
+                                                statements: [
+                                                    ExprStmt {
+                                                        expr: Call {
+                                                            callee: MemberAccess {
+                                                                object: Ident(
+                                                                    "response",
+                                                                ),
+                                                                member: "setContentType",
+                                                            },
+                                                            args: [
+                                                                StringLiteral(
+                                                                    "text/html",
+                                                                ),
+                                                            ],
+                                                        },
+                                                    },
+                                                ],
+                                            },
+                                        ),
+                                    },
+                                    VarDecl {
+                                        modifiers: [],
+                                        var_type: Reference {
+                                            name: "CallableStatement",
+                                            type_args: [],
+                                        },
+                                        declarators: [
+                                            VarDeclarator {
+                                                name: "cst",
+                                                init: Some(
+                                                    Call {
+                                                        callee: MemberAccess {
+                                                            object: Ident(
+                                                                "conn",
+                                                            ),
+                                                            member: "prepareCall",
+                                                        },
+                                                        args: [
+                                                            Binary {
+                                                                op: Add,
+                                                                left: Binary {
+                                                                    op: Add,
+                                                                    left: StringLiteral(
+                                                                        "{call ",
+                                                                    ),
+                                                                    right: Ident(
+                                                                        "param",
+                                                                    ),
+                                                                },
+                                                                right: StringLiteral(
+                                                                    "}",
+                                                                ),
+                                                            },
+                                                        ],
+                                                    },
+                                                ),
+                                            },
+                                        ],
+                                    },
+                                    VarDecl {
+                                        modifiers: [],
+                                        var_type: Reference {
+                                            name: "ResultSet",
+                                            type_args: [],
+                                        },
+                                        declarators: [
+                                            VarDeclarator {
+                                                name: "rs2",
+                                                init: Some(
+                                                    Call {
+                                                        callee: MemberAccess {
+                                                            object: Ident(
+                                                                "cst",
+                                                            ),
+                                                            member: "executeQuery",
+                                                        },
+                                                        args: [],
+                                                    },
+                                                ),
+                                            },
+                                        ],
+                                    },
+                                ],
+                            },
+                        ),
+                    },
+                ),
+            ],
+        },
+    ],
+}
