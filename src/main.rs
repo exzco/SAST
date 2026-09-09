@@ -4,13 +4,15 @@ use std::time::Instant;
 
 mod lexer;
 mod parser;
+pub mod semantic;
 use lexer::{Lexer, Token, TokenKind};
 use parser::Parser;
 
 use std::collections::HashMap;
 
 fn main() {
-    let target_dir = "../testdata";
+    // let target_dir = "../testdata";
+    let target_dir = "./src/example";
     println!("🚀 开始批量扫描目录: {}\n", target_dir);
 
     let mut total = 0;
@@ -87,5 +89,24 @@ fn test_single_file(file_path: &str) -> Result<(), String> {
         }
     }
     let mut parser = Parser::new(tokens);
-    parser.parse_compile_unit().map(|_| ())
+    // parser.parse_compile_unit().map(|_| ())
+    match parser.parse_compile_unit() {
+        Ok(_ast) => {
+            let cu = &_ast.classes;
+            for class in cu {
+                println!("解析到类名：{:#?}",class.name)
+            }
+
+            
+            let content = format!("{:#?}",_ast);
+            if let Err(e) = fs::write("src/test", content) {
+                eprintln!("[-] 写入 src/test 失败: {}", e);
+            } else {
+                println!("[+] 已成功将 AST 输出到 src/test 文件");
+            }
+            
+            Ok(())          
+        }
+        Err(_) => todo!()
+    }       
 }
