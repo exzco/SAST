@@ -72,6 +72,26 @@ impl SymbolTable {
             self.current = parent;
         }
     }
+    // 向上回溯作用域查找符号，变量，方法调用
+    pub fn lookup(&mut self, name: &str) -> Option<&Symbol> {
+        let mut current_id = Some(self.current);
+        while let Some(scope_id) = current_id {
+            let scope = &self.scopes[scope_id];
+            if let Some(symbol_ids) = scope.symbols.get(name) {
+                return self.symbols.get(symbol_ids[0]);
+            }
+            current_id = scope.parent;
+        }
+        None
+    }
+    pub fn define(&mut self, name: String, kind: SymbolKind, resolved_type: ResolvedType) -> SymbolId {
+        let id = self.symbols.len();
+        let sym = Symbol {id,name:name.clone(),kind,resolved_type};
+        self.symbols.push(sym);
+        let scope = &mut self.scopes[self.current];
+        scope.symbols.entry(name).or_insert_with(Vec::new).push(id);
+        id
+    }
 }
 
 pub struct ErrorMessage {
