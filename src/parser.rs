@@ -90,11 +90,11 @@ pub struct ClassDecl {
 #[derive(Debug, Clone, PartialEq)]
 pub enum ClassMember {
     Field(FieldDecl),
-    Method(MethodDecl),
     Constructor(ConstructorDecl),
-    Class(ClassDecl),
+    Method(MethodDecl),
     StaticInit(Box<Stmt>),
     InstanceInit(Box<Stmt>),
+    Class(ClassDecl),
 }
 
 #[derive(Debug, Clone, PartialEq)]
